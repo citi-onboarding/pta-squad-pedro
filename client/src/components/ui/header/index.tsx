@@ -5,23 +5,23 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function Header() {
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedService, setSelectedService] = useState("Atendimento");
 
   return (
-    <header className="w-full h-16 relative flex items-center justify-center shadow-sm px-8 py-2">
+    <header className="w-full h-20 relative flex items-center justify-center shadow-sm shadow-[#D9D9D9]">
       <div className="absolute left-8">
         <Image
           src={LogoCITiPet}
           alt="LogoCitiPet"
           width={189}
           height={74}
-          className="h-10 w-auto object-contain"
+          className="h-12 w-auto object-contain"
         ></Image>
       </div>
       <div className="flex gap-6 items-center">
         <button
           onClick={() => setSelectedService("Atendimento")}
-          className={`hover:text-[#50E678] font-medium transition-colors duration-300 text-base pb-1 border-b-2 ${
+          className={`hover:text-[#50E678] transition-colors duration-300 pb-1 border-b-2 ${
             selectedService === "Atendimento"
               ? "border-[#50E678] hover:text-black"
               : "border-transparent"
@@ -31,7 +31,7 @@ export default function Header() {
         </button>
         <button
           onClick={() => setSelectedService("Cadastro")}
-          className={`hover:text-[#50E678] font-medium transition-colors duration-300 text-base pb-1 border-b-2 ${
+          className={`hover:text-[#50E678] transition-colors duration-300 pb-1 border-b-2 ${
             selectedService === "Cadastro"
               ? "border-[#50E678] hover:text-black"
               : "border-transparent"
