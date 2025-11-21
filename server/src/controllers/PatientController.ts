@@ -47,5 +47,13 @@ class PatientController implements Crud {
 
         return response.status(httpStatus).send({ messageFromUpdate });
     };
+
+    findById = async (request: Request, response: Response) => {
+        const { id } = request.params;
+
+        const { httpStatus, value } = await this.citi.findById(id);
+
+        return response.status(httpStatus).send({ value });
+    };
 }  
 export default new PatientController();
