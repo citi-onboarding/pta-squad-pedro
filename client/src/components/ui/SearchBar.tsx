@@ -4,8 +4,10 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export default function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
+    <div style={{width: "520px", height:"50px", borderRadius:"8px", padding:"16px",margin:"16px", border: "1px solid #101010" 
+    }}>
     <input
       type={type}
       data-slot="input"
@@ -17,6 +19,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       )}
       {...props}
     />
+   </div>
   )
 }
 
