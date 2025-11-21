@@ -7,3 +7,9 @@ import Ovelha from "./ovelha.svg";
 import Porco from "./porco.svg";
 
 export { LogoCITi, Cachorro, Gato, Cavalo, Vaca, Ovelha, Porco };
+
+import LogoCITiPet from "./LogoCITiPet.svg"
+import CiTiMessage from "./ButtonGroups.svg"
+
+export { LogoCITiPet };
+export { CiTiMessage };
