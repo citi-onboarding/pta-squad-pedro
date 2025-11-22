@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "./controllers/UserController";
 import patientController from "./controllers/PatientController";
+import appointmentController from "./controllers/AppointmentController";
 
 const routes = express.Router();
 
@@ -14,5 +15,11 @@ routes.get("/patient", patientController.get);
 routes.delete("/patient/:id", patientController.delete);
 routes.patch("/patient/:id", patientController.update);
 routes.get("/patient/:id", patientController.findById);
+
+routes.post("/appointment", appointmentController.create);
+routes.get("/appointment", appointmentController.get);
+routes.delete("/appointment/:id", appointmentController.delete);
+routes.patch("/appointment/:id", appointmentController.update);
+routes.get("/appointment/:id", appointmentController.findById);
 
 export default routes;
