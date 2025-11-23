@@ -6,8 +6,7 @@ import { cn } from "@/lib/utils"
 
 export default function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
-    <div style={{width: "520px", height:"50px", borderRadius:"8px", padding:"16px",margin:"16px", border: "1px solid #101010" 
-    }}>
+    <div className="flex w-[520px] h-[50px] rounded-[8px] p-4 m-4 border-[#101010]">
     <input
       type={type}
       data-slot="input"
