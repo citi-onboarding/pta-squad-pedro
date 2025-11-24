@@ -22,6 +22,7 @@ model Patient {
   patientName   String
   patientAge    Int
   tutorName     String?
+  problemDescription String?
   
   appointment Appointment[]
 }
