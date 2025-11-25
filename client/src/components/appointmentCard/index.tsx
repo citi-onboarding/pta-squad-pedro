@@ -11,9 +11,36 @@ const mockAppointment = {
   appointment: "Primeira Consulta",
 };
 
-export default function AppointmentCard() {
+type AppointmentCardProps = {
+  appointment: "Primeira Consulta" | "Retorno" | "Vacinação" | "Check-up" | string;
+  status: "available" | "late" | string;
+};
+
+function getBackgroundColor(appointment: AppointmentCardProps["appointment"], status: AppointmentCardProps["status"]) {
+
+    if (status == "late") {
+        return "bg-[#F0F0F0]"
+    }
+
+  switch (appointment) {
+
+    case "Primeira Consulta":
+      return "bg-[#BFB5FF]";
+    case "Retorno":
+      return "bg-[#FF641999]";
+    case "Vacinação":
+      return "bg-[#AAE1FF]";
+    case "Check-up":
+        return "bg-[#9CFF95]"
+    default:
+      return "bg-[#F0F0F0]";
+  }
+}
+
+export default function AppointmentCard({ appointment, status }: AppointmentCardProps) {
+
   return (
-    <div className="h-[135px] w-[495px] bg-[#BFB5FF] rounded-[16px] flex justify-between items-center px-6">
+    <div className={`h-[135px] w-[495px] rounded-[16px] flex justify-between items-center px-6 ${getBackgroundColor(appointment, status)}`}>
       <div className=" bg-zinc-100 w-[51px] h-[90px] rounded-[4px] flex flex-col items-center px-2.5 gap-1 py-3">
         <AlarmClock></AlarmClock>
         <div className="font-semibold text-sm">
