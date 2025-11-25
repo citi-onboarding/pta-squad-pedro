@@ -4,28 +4,18 @@ import CatImage from "assets/gato.svg";
 
 import Image from "next/image";
 
-const mockAppointment = {
-  animalName: "Luna",
-
-  ownerName: "João Alves",
-
-  doctorName: "Dr. José Carlos",
-
-  date: "18/02",
-
-  hour: "13:00",
-
-  appointment: "Primeira Consulta",
-};
-
 type AppointmentCardProps = {
+  animalName: string;
+  ownerName: string;
+  doctorName: string;
+  date: string;
+  hour: string;
   appointment:
     | "Primeira Consulta"
     | "Retorno"
     | "Vacinação"
     | "Check-up"
     | string;
-
   status: "available" | "late" | string;
 };
 
@@ -56,6 +46,11 @@ function getBackgroundColor(
 }
 
 export default function AppointmentCard({
+  animalName,
+  ownerName,
+  doctorName,
+  date,
+  hour,
   appointment,
   status,
 }: AppointmentCardProps) {
@@ -66,30 +61,30 @@ export default function AppointmentCard({
         status
       )}`}
     >
-      <div className=" bg-zinc-100 w-[51px] h-[90px] rounded-[4px] flex flex-col items-center px-2.5 gap-1 py-3">
+      <div className=" bg-zinc-100 w-[51px] h-[90px] rounded-[4px] flex flex-col items-center px-2.5 gap-1 py-3 shrink-0">
         <AlarmClock></AlarmClock>
 
         <div className="font-semibold text-sm">
-          <p>{mockAppointment.date}</p>
+          <p>{date}</p>
 
-          <p>{mockAppointment.hour}</p>
+          <p>{hour}</p>
         </div>
       </div>
 
       <div className="flex flex-row gap-6">
         <p>
-          <span className="font-bold">{mockAppointment.animalName}</span>/
-          <span className="">{mockAppointment.ownerName}</span>
+          <span className="font-bold">{animalName}</span>/
+          <span className="">{ownerName}</span>
         </p>
 
-        <p className="">{mockAppointment.doctorName}</p>
+        <p>{doctorName}</p>
       </div>
 
       <div className="h-[103px] flex flex-col items-center gap-2">
         <Image src={CatImage} alt="CatImage" width={70} height={70} />
 
-        <p className="text-sm bg-zinc-100 rounded-[4px] py-1 px-2">
-          {mockAppointment.appointment}
+        <p className={`${appointment === "Primeira Consulta" ? "text-xs" : "text-sm"} bg-zinc-100 rounded-sm py-1 px-2 whitespace-nowrap`}>
+          {appointment}
         </p>
       </div>
     </div>
