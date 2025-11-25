@@ -1,4 +1,6 @@
 import { AlarmClock } from "lucide-react";
+import CatImage from "assets/gato.svg"
+import Image from "next/image";
 
 const mockAppointment = {
   animalName: "Luna",
@@ -24,7 +26,9 @@ export default function AppointmentCard() {
         </p>
         <p>{mockAppointment.doctorName}</p>
       </div>
-      <div></div>
+      <div>
+        <Image src={CatImage} alt="CatImage"/>
+      </div>
     </div>
   );
 }
