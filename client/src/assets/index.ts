@@ -9,5 +9,6 @@ import Ovelha from "./ovelha.svg";
 import Porco from "./porco.svg";
 import Calendario from "./calendar_month.svg"
 import Seta from "./seta.svg"
+import BotãoX from "./Botãoclose.svg"
 
-export { LogoCITi, Cachorro, Gato, Cavalo, Vaca, Ovelha, Porco, LogoCITiPet, CiTiMessage, Calendario, Seta };
+export { LogoCITi, Cachorro, Gato, Cavalo, Vaca, Ovelha, Porco, LogoCITiPet, CiTiMessage, Calendario, Seta, BotãoX };
