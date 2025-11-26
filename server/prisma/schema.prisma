@@ -10,6 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum animalType {
+  DOG
+  CAT
+  PIG
+  COW
+  SHEEP
+  HORSE
+}
+
 enum AppointmentType {
   FIRST
   RETURN
@@ -23,6 +32,7 @@ model Patient {
   patientAge    Int
   tutorName     String?
   problemDescription String?
+  animalType    animalType
   
   appointment Appointment[]
 }
