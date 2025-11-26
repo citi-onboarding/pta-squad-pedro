@@ -56,7 +56,7 @@ export default function AppointmentCard({
 }: AppointmentCardProps) {
   return (
     <div
-      className={`h-[135px] w-[495px] rounded-[16px] flex justify-between items-center px-6 ${getBackgroundColor(
+      className={`h-[135px] w-[495px] gap-4 rounded-[16px] flex justify-between items-center px-6 ${getBackgroundColor(
         appointment,
         status
       )}`}
@@ -83,7 +83,11 @@ export default function AppointmentCard({
       <div className="h-[103px] flex flex-col items-center gap-2">
         <Image src={CatImage} alt="CatImage" width={70} height={70} />
 
-        <p className={`${appointment === "Primeira Consulta" ? "text-xs" : "text-sm"} bg-zinc-100 rounded-sm py-1 px-2 whitespace-nowrap`}>
+        <p
+          className={`${
+            appointment === "Primeira Consulta" ? "text-xs" : "text-sm"
+          } bg-zinc-100 rounded-sm py-1 px-2 whitespace-nowrap w-[110px] text-center`}
+        >
           {appointment}
         </p>
       </div>

@@ -4,7 +4,7 @@ const mockAppointments = [
   {
     animalName: "Thor",
     ownerName: "Maria Silva",
-    doctorName: "Dra. Ana Paula",
+    doctorName: "Dra. Fernanda",
     date: "20/02",
     hour: "09:30",
     appointment: "Retorno",
@@ -21,7 +21,7 @@ const mockAppointments = [
   },
   {
     animalName: "Bob",
-    ownerName: "Fernanda Costa",
+    ownerName: "Fernanda",
     doctorName: "Dra. Ana Paula",
     date: "22/02",
     hour: "11:00",
@@ -30,7 +30,7 @@ const mockAppointments = [
   },
   {
     animalName: "Paçoca",
-    ownerName: "Lucas Oliveira",
+    ownerName: "Lucas",
     doctorName: "Dr. José Carlos",
     date: "23/02",
     hour: "14:45",
@@ -41,7 +41,7 @@ const mockAppointments = [
     animalName: "Destruidor",
     ownerName: "Pedro",
     doctorName: "Dr. Felipe",
-    date: "21/004",
+    date: "21/04",
     hour: "17:00",
     appointment: "Check-up",
     status: "late",
