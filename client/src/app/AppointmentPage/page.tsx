@@ -25,7 +25,7 @@ const mockAppointments = [
     doctorName: "Dr. Pedro",
     date: "26/10",
     hour: "10:30",
-    appointment: "Retorno", 
+    appointment: "Retorno",
     status: "available",
   },
   {
@@ -45,7 +45,7 @@ const mockAppointments = [
     doctorName: "Dr. Roberto",
     date: "26/10",
     hour: "14:00",
-    appointment: "Check-up", 
+    appointment: "Check-up",
     status: "available",
   },
   {
@@ -56,7 +56,7 @@ const mockAppointments = [
     date: "26/10",
     hour: "08:00",
     appointment: "Retorno",
-    status: "late", 
+    status: "late",
   },
   {
     id: 6,
@@ -69,6 +69,13 @@ const mockAppointments = [
     status: "available",
   },
 ];
+
+const agendamentoArray = mockAppointments.filter(
+  (appointment) => appointment.status == "available"
+);
+const historicoArray = mockAppointments.filter(
+  (appointment) => appointment.status == "late"
+);
 
 export default function AppointmentPage() {
   const [selectedFilter, setSelectedFilter] = useState("Agendamento");
@@ -124,9 +131,19 @@ export default function AppointmentPage() {
       </div>
 
       <div className=" mx-28 grid grid-cols-2 gap-4">
-        {mockAppointments.map((appointment) => (
-            <AppointmentCard key={appointment.id} {...appointment}></AppointmentCard>
-        ))}
+        {selectedFilter === "Agendamento"
+          ? agendamentoArray.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                {...appointment}
+              ></AppointmentCard>
+            ))
+          : historicoArray.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                {...appointment}
+              ></AppointmentCard>
+            ))}
       </div>
     </div>
   );
