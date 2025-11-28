@@ -6,81 +6,89 @@ import Input from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import AppointmentCard from "@/components/appointmentCard";
+import { getData } from "@/api";
+import { useEffect } from "react";
 
-const mockAppointments = [
-  {
-    id: 1,
-    animalName: "Paçoca",
-    ownerName: "Mariana",
-    doctorName: "Dra. Ana",
-    date: "26/10",
-    hour: "09:00",
-    appointment: "Primeira Consulta",
-    status: "available",
-  },
-  {
-    id: 2,
-    animalName: "Thor",
-    ownerName: "Carlos",
-    doctorName: "Dr. Pedro",
-    date: "26/10",
-    hour: "10:30",
-    appointment: "Retorno",
-    status: "available",
-  },
-  {
-    id: 3,
-    animalName: "Luna",
-    ownerName: "Fernanda",
-    doctorName: "Dra. Ana",
-    date: "26/10",
-    hour: "11:00",
-    appointment: "Vacinação",
-    status: "available",
-  },
-  {
-    id: 4,
-    animalName: "Simba",
-    ownerName: "João",
-    doctorName: "Dr. Roberto",
-    date: "26/10",
-    hour: "14:00",
-    appointment: "Check-up",
-    status: "available",
-  },
-  {
-    id: 5,
-    animalName: "Garfield",
-    ownerName: "Beatriz",
-    doctorName: "Dr. Pedro",
-    date: "26/10",
-    hour: "08:00",
-    appointment: "Retorno",
-    status: "late",
-  },
-  {
-    id: 6,
-    animalName: "Frederico",
-    ownerName: "Sebastião",
-    doctorName: "Dra. Ana Beatriz",
-    date: "27/10",
-    hour: "16:45",
-    appointment: "Check-up",
-    status: "available",
-  },
-];
-
-const agendamentoArray = mockAppointments.filter(
-  (appointment) => appointment.status == "available"
-);
-const historicoArray = mockAppointments.filter(
-  (appointment) => appointment.status == "late"
-);
+type Appointment = {
+  id: number;
+  animalName: string;
+  ownerName: string;
+  doctorName: string;
+  date: string;
+  hour: string;
+  appointment: string;
+  status: "available" | "late";
+};
 
 export default function AppointmentPage() {
   const [selectedFilter, setSelectedFilter] = useState("Agendamento");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSearchTerm, setFilteredSearchTerm] = useState("");
+  const [appointmentsList, setAppointmentsList] = useState<Appointment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  type RawAppointment = {
+  id: number;
+  appointmentType: string;
+  appointmentDate: string;
+  doctorName: string;
+  patientId: number;
+};
+
+type RawPatient = {
+  id: number;
+  patientName: string;
+  tutorName: string;
+  animalType: string;
+};
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const getAppointments = await getData("appointment");
+        const getPacients = await getData("pacient");
+
+        const appointmentsArray = JSON.parse(getAppointments) as RawAppointment[];
+        const pacientsArray = JSON.parse(getPacients) as RawPatient[];
+
+        const baseArray = appointmentsArray.map((appointment) => {
+          const foundPatient = pacientsArray.find(
+            (patient) => patient.id === appointment.patientId
+          );
+
+          const dateObj = new Date(appointment.appointmentDate);
+          const isLate = dateObj < new Date();
+
+          const typeTranslation: Record<string, string> = {
+            FIRST: "Primeira Consulta",
+            RETURN: "Retorno",
+            CHECKUP: "Check-up",
+            VACCINATION: "Vacinação",
+          };
+
+          return {
+            id: appointment.id,
+            animalName: foundPatient ? foundPatient.patientName : "Não encontrado",
+            ownerName: foundPatient ? foundPatient.tutorName : "-",
+            doctorName: appointment.doctorName,
+            date: dateObj.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+            hour: dateObj.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+            appointment: typeTranslation[appointment.appointmentType] || appointment.appointmentType,
+            status: isLate ? "late" : "available" as "available" | "late",
+          };
+        });
+
+        setAppointmentsList(baseArray);
+      } catch (error) {
+        console.error(error);
+        alert("Não foi possível carregar as consultas");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
 
   // Essa funcão é responsável por setar o valor do filtro com o que está digitado no input, no momento em que o botão é clicado
   const handleSearch = () => {
