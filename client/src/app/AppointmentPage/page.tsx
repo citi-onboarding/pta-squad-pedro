@@ -79,6 +79,19 @@ const historicoArray = mockAppointments.filter(
 
 export default function AppointmentPage() {
   const [selectedFilter, setSelectedFilter] = useState("Agendamento");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredSearchTerm, setFilteredSearchTerm] = useState("");
+
+  const handleSearch = () => {
+    setFilteredSearchTerm(searchTerm);
+  };
+
+  const handleFilterClick = (filter: string) => {
+    setSelectedFilter(filter);
+
+    setFilteredSearchTerm("");
+    setSearchTerm("");
+  };
 
   function changeSelectedFilter() {
     if (selectedFilter == "Agendamento") {
@@ -87,6 +100,23 @@ export default function AppointmentPage() {
       setSelectedFilter("Agendamento");
     }
   }
+
+  const getFilteredAppointments = () => {
+
+    const baseArray = selectedFilter === "Agendamento" ? agendamentoArray : historicoArray;
+
+    if (!filteredSearchTerm) {
+      return baseArray;
+    }
+
+    return baseArray.filter((appointment) =>
+      appointment.doctorName
+        .toLowerCase()
+        .includes(filteredSearchTerm.toLowerCase())
+    );
+  };
+
+  const displayedAppointments = getFilteredAppointments();
 
   return (
     <div>
@@ -104,7 +134,11 @@ export default function AppointmentPage() {
       <div className="mx-28">
         <h2 className="text-2xl">Qual o médico ?</h2>
         <div className="flex flex-row gap-6 py-6">
-          <Input></Input>
+          <Input
+            placeholder="Digite o nome do Dr(a)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          ></Input>
           <Button variant="secondary" className="px-6 my-1.5">
             Buscar
           </Button>
@@ -130,7 +164,7 @@ export default function AppointmentPage() {
         </button>
       </div>
 
-      <div className=" mx-28 grid grid-cols-2 gap-4">
+      <div className=" mx-28 grid grid-cols-2 gap-6">
         {selectedFilter === "Agendamento"
           ? agendamentoArray.map((appointment) => (
               <AppointmentCard
