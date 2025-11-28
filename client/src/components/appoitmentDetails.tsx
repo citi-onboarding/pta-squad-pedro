@@ -1,17 +1,16 @@
-import Image from "next/image"
-import  LogoCITiPet  from "@/assets/LogoCITiPet.svg"
-import { Button } from "@/components/ui/button"
+import Header from "@/components/ui/header"
+import DetailsContent from "@/components/appoitmentpage"
 
 export default function AppoitmentDetails() {
     return(
         <div>
             <div>
-                <Image src={LogoCITiPet} alt="Logo" width={189} height={74} className="mt-5 pl-12"/>
+                <Header/>
             </div>
-            <div></div>
-
+            <div>
+                <DetailsContent/>
+            </div>
         </div>
-    )
 
-
+)
 }
