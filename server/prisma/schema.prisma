@@ -10,15 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int    @id @default(autoincrement())
-  firstName String
-  lastName  String
-  age       Int
+enum animalType {
+  DOG
+  CAT
+  PIG
+  COW
+  SHEEP
+  HORSE
 }
 
-model Test {
-  id   Int    @id @default(autoincrement())
-  name String
-  age  Int
+enum AppointmentType {
+  FIRST
+  RETURN
+  CHECKUP
+  VACCINATION
 }
+
+model Patient {
+  id            Int     @id @default(autoincrement())
+  patientName   String
+  patientAge    Int
+  tutorName     String?
+  problemDescription String?
+  animalType    animalType
+  
+  appointment Appointment[]
+}
+
+model Appointment {
+  id               Int             @id @default(autoincrement())
+  appointmentType  AppointmentType
+  appointmentDate  DateTime
+  doctorName       String
+  
+  patientId        Int
+  patient          Patient @relation(fields: [patientId], references: [id])
+}
+

@@ -1,23 +1,61 @@
-import Header from "@/components/ui/header";
-import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
-import { CircleCheckBig } from "lucide-react";
+import AppointmentCard from "@/components/appointmentCard";
 
+const mockAppointments = [
+  {
+    animalName: "Thor",
+    ownerName: "Maria Silva",
+    doctorName: "Dra. Fernanda",
+    date: "20/02",
+    hour: "09:30",
+    appointment: "Retorno",
+    status: "available",
+  },
+  {
+    animalName: "Mia",
+    ownerName: "Carlos Eduardo",
+    doctorName: "Dr. Roberto",
+    date: "21/02",
+    hour: "15:00",
+    appointment: "Check-up",
+    status: "available",
+  },
+  {
+    animalName: "Bob",
+    ownerName: "Fernanda",
+    doctorName: "Dra. Ana Paula",
+    date: "22/02",
+    hour: "11:00",
+    appointment: "Vacinação",
+    status: "available",
+  },
+  {
+    animalName: "Paçoca",
+    ownerName: "Lucas",
+    doctorName: "Dr. José Carlos",
+    date: "23/02",
+    hour: "14:45",
+    appointment: "Primeira Consulta",
+    status: "available",
+  },
+  {
+    animalName: "Destruidor",
+    ownerName: "Pedro",
+    doctorName: "Dr. Felipe",
+    date: "21/04",
+    hour: "17:00",
+    appointment: "Check-up",
+    status: "late",
+  },
+];
 
 export default function TestPage() {
   return (
-    <div className=" h-screen flex flex-row justify-center items-center gap-12">
-      <Button className="flex items-center gap-2">
-        <CirclePlus className="text-zinc-100"></CirclePlus>
-        Nova Consulta
-      </Button>
-      <Button className="flex items-center gap-2">
-        <CircleCheckBig></CircleCheckBig>
-        Agendamento
-      </Button>
-      <Button>Enviar</Button>
-      <Button>Finalizar Cadastro</Button>
-      <Button variant={"secondary"}>Buscar</Button>
+    <div className="min-h-screen w-full flex justify-center items-start bg-gray-50 p-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 w-full max-w-7xl">
+        {mockAppointments.map((data, index) => (
+          <AppointmentCard key={index} {...data} />
+        ))}
+      </div>
     </div>
   );
 }
