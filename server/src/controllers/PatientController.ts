@@ -4,17 +4,18 @@ import { Citi, Crud } from "../global";
 class PatientController implements Crud {
     constructor(private readonly citi = new Citi("Patient")) {}
     create = async (request: Request, response: Response) => {  
-        const { patientName, patientAge, tutorName, problemDescription } = request.body;
+        const { patientName, patientAge, tutorName, problemDescription, animalType } = request.body;
 
         const isAnyUndefined = this.citi.areValuesUndefined(   
             patientName,
             patientAge,
             tutorName,
-            problemDescription
+            problemDescription,
+            animalType
         );
         if (isAnyUndefined) return response.status(400).send();
 
-        const newPatient = { patientName, patientAge, tutorName, problemDescription };
+        const newPatient = { patientName, patientAge, tutorName, problemDescription, animalType };
         const { httpStatus, message } = await this.citi.insertIntoDatabase(newPatient);
 
         return response.status(httpStatus).send({ message });
@@ -36,9 +37,9 @@ class PatientController implements Crud {
 
     update = async (request: Request, response: Response) => {
         const { id } = request.params;
-        const { patientName, patientAge, tutorName, problemDescription} = request.body;
+        const { patientName, patientAge, tutorName, problemDescription, animalType } = request.body;
 
-        const updatedValues = { patientName, patientAge, tutorName, problemDescription};
+        const updatedValues = { patientName, patientAge, tutorName, problemDescription, animalType };
         
         const { httpStatus, messageFromUpdate } = await this.citi.updateValue(
             id,

@@ -28,16 +28,16 @@ function getBackgroundColor(
   }
 
   switch (appointment) {
-    case "Primeira Consulta":
+    case "FIRST":
       return "bg-[#BFB5FF]";
 
-    case "Retorno":
+    case "RETURN":
       return "bg-[#FF641999]";
 
-    case "Vacinação":
+    case "VACCINATION":
       return "bg-[#AAE1FF]";
 
-    case "Check-up":
+    case "CHECKUP":
       return "bg-[#9CFF95]";
 
     default:
