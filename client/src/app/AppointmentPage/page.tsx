@@ -82,17 +82,12 @@ export default function AppointmentPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSearchTerm, setFilteredSearchTerm] = useState("");
 
+  // Essa funcão é responsável por setar o valor do filtro com o que está digitado no input, no momento em que o botão é clicado
   const handleSearch = () => {
     setFilteredSearchTerm(searchTerm);
   };
 
-  const handleFilterClick = (filter: string) => {
-    setSelectedFilter(filter);
-
-    setFilteredSearchTerm("");
-    setSearchTerm("");
-  };
-
+  // Essa função serve para alterar o valor do estado do tipo de filtro de acordo com o botão/filtro selecionado
   function changeSelectedFilter() {
     if (selectedFilter == "Agendamento") {
       setSelectedFilter("Histórico");
@@ -101,9 +96,10 @@ export default function AppointmentPage() {
     }
   }
 
+  // Essa é a função principal do filtro, primeiro, ela cria um array base de acordo com o filtro escolhido e, em seguida, filtra esse array de acordo com o que foi digitado no input, combinando os dois filtros
   const getFilteredAppointments = () => {
-
-    const baseArray = selectedFilter === "Agendamento" ? agendamentoArray : historicoArray;
+    const baseArray =
+      selectedFilter === "Agendamento" ? agendamentoArray : historicoArray;
 
     if (!filteredSearchTerm) {
       return baseArray;
@@ -115,7 +111,7 @@ export default function AppointmentPage() {
         .includes(filteredSearchTerm.toLowerCase())
     );
   };
-
+  
   const displayedAppointments = getFilteredAppointments();
 
   return (
@@ -139,7 +135,11 @@ export default function AppointmentPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           ></Input>
-          <Button variant="secondary" className="px-6 my-1.5">
+          <Button
+            variant="secondary"
+            className="px-6 my-1.5"
+            onClick={handleSearch}
+          >
             Buscar
           </Button>
         </div>
@@ -165,19 +165,15 @@ export default function AppointmentPage() {
       </div>
 
       <div className=" mx-28 grid grid-cols-2 gap-6">
-        {selectedFilter === "Agendamento"
-          ? agendamentoArray.map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                {...appointment}
-              ></AppointmentCard>
-            ))
-          : historicoArray.map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                {...appointment}
-              ></AppointmentCard>
-            ))}
+        {displayedAppointments.length > 0 ? (
+          displayedAppointments.map((appointment) => (
+            <AppointmentCard key={appointment.id} {...appointment} />
+          ))
+        ) : (
+          <p className="col-span-2 text-center text-gray-500 py-10">
+            Nenhum resultado encontrado.
+          </p>
+        )}
       </div>
     </div>
   );
