@@ -9,17 +9,6 @@ import AppointmentCard from "@/components/appointmentCard";
 import { getData } from "@/api";
 import { useEffect } from "react";
 
-type Appointment = {
-  id: number;
-  animalName: string;
-  ownerName: string;
-  doctorName: string;
-  date: string;
-  hour: string;
-  appointment: string;
-  status: "available" | "late";
-};
-
 export default function AppointmentPage() {
   const [selectedFilter, setSelectedFilter] = useState("Agendamento");
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,19 +17,30 @@ export default function AppointmentPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   type RawAppointment = {
-  id: number;
-  appointmentType: string;
-  appointmentDate: string;
-  doctorName: string;
-  patientId: number;
-};
+    id: number;
+    appointmentType: string;
+    appointmentDate: string;
+    doctorName: string;
+    patientId: number;
+  };
 
-type RawPatient = {
-  id: number;
-  patientName: string;
-  tutorName: string;
-  animalType: string;
-};
+  type RawPatient = {
+    id: number;
+    patientName: string;
+    tutorName: string;
+    animalType: string;
+  };
+
+  type Appointment = {
+    id: number;
+    animalName: string;
+    ownerName: string;
+    doctorName: string;
+    date: string;
+    hour: string;
+    appointment: string;
+    status: "available" | "late";
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -48,10 +48,18 @@ type RawPatient = {
         const getAppointments = await getData("appointment");
         const getPacients = await getData("pacient");
 
-        const appointmentsArray = JSON.parse(getAppointments) as RawAppointment[];
+        const appointmentsArray = JSON.parse(
+          getAppointments
+        ) as RawAppointment[];
         const pacientsArray = JSON.parse(getPacients) as RawPatient[];
 
-        const baseArray = appointmentsArray.map((appointment) => {
+        const validAppointments = appointmentsArray.filter((appointment) => {
+          return pacientsArray.some(
+            (patient) => patient.id === appointment.patientId
+          );
+        });
+
+        const baseArray = validAppointments.map((appointment) => {
           const foundPatient = pacientsArray.find(
             (patient) => patient.id === appointment.patientId
           );
@@ -68,16 +76,23 @@ type RawPatient = {
 
           return {
             id: appointment.id,
-            animalName: foundPatient ? foundPatient.patientName : "Não encontrado",
-            ownerName: foundPatient ? foundPatient.tutorName : "-",
+            animalName: foundPatient?.patientName,
+            ownerName: foundPatient?.tutorName,
             doctorName: appointment.doctorName,
-            date: dateObj.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
-            hour: dateObj.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-            appointment: typeTranslation[appointment.appointmentType] || appointment.appointmentType,
-            status: isLate ? "late" : "available" as "available" | "late",
-          };
+            date: dateObj.toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+            }),
+            hour: dateObj.toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            appointment:
+              typeTranslation[appointment.appointmentType] ||
+              appointment.appointmentType,
+            status: isLate ? "late" : "available",
+          } as Appointment;
         });
-
         setAppointmentsList(baseArray);
       } catch (error) {
         console.error(error);
@@ -86,16 +101,13 @@ type RawPatient = {
         setIsLoading(false);
       }
     }
-
     loadData();
   }, []);
 
-  // Essa funcão é responsável por setar o valor do filtro com o que está digitado no input, no momento em que o botão é clicado
   const handleSearch = () => {
     setFilteredSearchTerm(searchTerm);
   };
 
-  // Essa função serve para alterar o valor do estado do tipo de filtro de acordo com o botão/filtro selecionado
   function changeSelectedFilter() {
     if (selectedFilter == "Agendamento") {
       setSelectedFilter("Histórico");
@@ -104,7 +116,6 @@ type RawPatient = {
     }
   }
 
-  // Essa é a função principal do filtro, primeiro, ela cria um array base de acordo com o filtro escolhido e, em seguida, filtra esse array de acordo com o que foi digitado no input, combinando os dois filtros
   const getFilteredAppointments = () => {
     const baseArray =
       selectedFilter === "Agendamento" ? agendamentoArray : historicoArray;
