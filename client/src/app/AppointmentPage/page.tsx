@@ -111,7 +111,7 @@ export default function AppointmentPage() {
         .includes(filteredSearchTerm.toLowerCase())
     );
   };
-  
+
   const displayedAppointments = getFilteredAppointments();
 
   return (
