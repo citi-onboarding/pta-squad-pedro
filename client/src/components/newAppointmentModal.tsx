@@ -1,18 +1,21 @@
+"use client"
 
 import React from "react"
 import Image from "next/image"
 import BotãoX from "@/assets/Botãoclose.svg"
 import LogoCITiPet from "@/assets/LogoCITiPet.svg"
-import IconeRelogio from "@/assets/IconeRelogio.svg" // falta importar o ícone do relógio
+import { ModalDatePicker } from "@/components/ui/ModalDatePicker"
+import { TimePicker } from "@/components/ui/TimePicker"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/Input"
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select" // fazer o select
+} from "@/components/ui/select" 
 
 export default function NewAppointmentModal() {
     const [open, setOpen] = React.useState(true)
@@ -52,7 +55,7 @@ export default function NewAppointmentModal() {
                         </div>
 
                         <Select>    
-                           <SelectTrigger className="w-[358px] h-[50px] rounded-[8px] border border-[#101010]">
+                           <SelectTrigger className="w-[358px] h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400">
                              <SelectValue placeholder="Selecione aqui" />
                            </SelectTrigger>
                            <SelectContent>
@@ -63,7 +66,53 @@ export default function NewAppointmentModal() {
                            </SelectContent> 
                         </Select>
 
+                    </div>
+
+                    <div className="w-[358px] h-[80px] gap-[12px] flex flex-col" >  
+
+                        <div className="text-[16px]">
+                                <span className="font-[700]">Médico Responsável</span>
+                        </div>
+
+                        
+                        <Input
+                            className="w-[358px] h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
+                            placeholder="Digite aqui..."
+                        />
+                        
+                    </div>
+                
+                </div>
+
+                <div className="gap-[12px] flex flex-row">
+
+                    <div className="w-[358px] h-[80px] gap-[12px] flex flex-col">   
                     
+                        <div className="text-[16px]">
+                            <span className="font-[700]">Data de atendimento</span>
+                        </div>
+
+                        <ModalDatePicker
+                            className="w-[358px] h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
+                            placeholder="dd/mm/aa"
+
+                        />
+                    
+                    
+                    </div>
+
+                    <div className="w-[358px] h-[80px] gap-[12px] flex flex-col">
+
+                        <div className="text-[16px]">
+                            <span className="font-[700]">Horário do Atendimento</span>
+                        </div>
+
+                        <TimePicker
+                            className="w-[358px] h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
+                            placeholder="00:00"
+                        />
+
+
 
                     </div>
 
@@ -73,6 +122,8 @@ export default function NewAppointmentModal() {
 
 
         </div>
+
+
         )
     
     }
