@@ -1,93 +1,103 @@
 'use client'
 
 import { useState } from 'react'
-
-import { CalendarIcon } from 'lucide-react'
-
+import Image from "next/image" 
+import IconeCalendario from "@/assets/calendar_month.svg"
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/Calendar'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { cn } from "@/lib/utils"
 
 function formatDate(date: Date | undefined) {
-  if (!date) {
-    return ''
-  }
-
+  if (!date) return ''
   return date.toLocaleDateString('pt-Br', {
     day: '2-digit',
-    month: 'long',
+    month: '2-digit',
     year: 'numeric'
   })
 }
 
 function isValidDate(date: Date | undefined) {
-  if (!date) {
-    return false
-  }
-
+  if (!date) return false
   return !isNaN(date.getTime())
 }
 
-const DatePickerWithinInputDemo = () => {
+interface ModalDatePickerProps {
+  className?: string;
+  placeholder?: string;
+}
+
+export const ModalDatePicker = ({ className, placeholder }: ModalDatePickerProps) => {
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState<Date | undefined>(new Date())
-  const [month, setMonth] = useState<Date | undefined>(date)
   const [value, setValue] = useState(formatDate(date))
 
   return (
-    <div className='w-full max-w-xs space-y-2'>
-      <Label htmlFor='date' className='px-1'>
-        Date picker within input
+    <div className="relative w-full">
+      <Label htmlFor='date' className='sr-only'>
+        Date picker
       </Label>
-      <div className='relative flex gap-2'>
-        <Input
-          id='date'
-          value={value}
-          placeholder='January 01, 2025'
-          className='bg-background pr-10'
-          onChange={e => {
-            const date = new Date(e.target.value)
+    
+      <Popover open={open} onOpenChange={setOpen}>
+        <div className='relative w-full'>
+          <Input
+            id='date'
+            value={value}
+            placeholder={placeholder || 'DD/MM/AAAA'}
+            className={cn(
+               "bg-white pr-10 text-base placeholder:text-gray-400 w-full", 
+               className
+            )}
+            onChange={e => {
+              const dateStr = e.target.value
+              setValue(dateStr)
+              const dateObj = new Date(dateStr)
+              if (isValidDate(dateObj)) {
+                setDate(dateObj)
+              }
+            }}
+            onKeyDown={e => {
+              if (e.key === 'ArrowDown') {
+                e.preventDefault()
+                setOpen(true)
+              }
+            }}
+          />
 
-            setValue(e.target.value)
-
-            if (isValidDate(date)) {
-              setDate(date)
-              setMonth(date)
-            }
-          }}
-          onKeyDown={e => {
-            if (e.key === 'ArrowDown') {
-              e.preventDefault()
-              setOpen(true)
-            }
-          }}
-        />
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button id='date-picker' variant='ghost' className='absolute top-1/2 right-2 size-6 -translate-y-1/2'>
-              <CalendarIcon className='size-3.5' />
-              <span className='sr-only'>Pick a date</span>
+          <PopoverTrigger onClick={() => setOpen(!open)}>
+            <Button 
+              id='date-picker' 
+              variant='ghost' 
+              className='absolute top-0 right-0 h-full px-3 hover:bg-transparent'
+              type="button"
+            >
+              <Image 
+                src={IconeCalendario} 
+                alt="Ícone Calendário" 
+                width={20} 
+                height={20} 
+                className="opacity-100" 
+              />
+              <span className='sr-only'>Escolher data</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className='w-auto overflow-hidden p-0' align='end' alignOffset={-8} sideOffset={10}>
-            <Calendar
-              mode='single'
-              selected={date}
-              month={month}
-              onMonthChange={setMonth}
-              onSelect={date => {
-                setDate(date)
-                setValue(formatDate(date))
-                setOpen(false)
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+
+          {open && (
+            <PopoverContent className='w-auto p-0 right-0'>
+              <Calendar
+                selected={date}
+                onSelect={(newDate) => {
+                  setDate(newDate)
+                  setValue(formatDate(newDate))
+                  setOpen(false)
+                }}
+              />
+            </PopoverContent>
+          )}
+        </div>
+      </Popover>
     </div>
   )
 }
-
-export default DatePickerWithinInputDemo

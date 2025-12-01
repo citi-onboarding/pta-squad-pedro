@@ -1,28 +1,50 @@
 "use client"
 
-import { Clock8Icon } from 'lucide-react'
-
+import { useState } from 'react'
+import Image from "next/image" 
+import IconeRelogio from "@/assets/icons/alarmIcon.svg"
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/label'
+import { cn } from "@/lib/utils" 
 
-export default function TimePicker() {
+interface TimePickerProps {
+  className?: string;
+  placeholder?: string;
+}
+
+export function TimePicker({ className, placeholder }: TimePickerProps) {
+  const [time, setTime] = useState("00:00")
+
   return (
-    <div className='w-full max-w-xs space-y-2'>
-      <Label htmlFor='timepicker'>Time input</Label>
-      <div className='relative'>
-        <div className='text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50'>
-          <Clock8Icon className='size-4' />
-          <span className='sr-only'>User</span>
-        </div>
+    <div className='relative w-full'>
+      <Label htmlFor='time-picker' className='sr-only'>Time input</Label>
+      <div className='relative w-full'>
+        
         <Input
           type='time'
           id='time-picker'
-          step='1'
-          defaultValue='00:00'
-          className='peer bg-background appearance-none pl-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+          placeholder={placeholder}
+          className={cn(
+            "bg-white pr-10 pl-3 text-base w-full appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none",
+            time === "00:00" ? "text-gray-400" : "text-primary",
+            className
+          )}
         />
+
+        <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
+          {}
+          <Image 
+            src={IconeRelogio} 
+            alt="Ícone Relógio" 
+            width={24} 
+            height={24} 
+            className="opacity-100" 
+          />
+        </div>
+
       </div>
     </div>
   )
 }
-
