@@ -93,7 +93,7 @@ export default function NewAppointmentModal() {
                     <div className="w-[358px] h-[80px] gap-[12px] flex flex-col">   
                     
                         <div className="text-[16px]">
-                            <span className="font-[700]">Data de atendimento</span>
+                            <span className="font-[700]">Data do atendimento</span>
                         </div>
 
                         <ModalDatePicker
