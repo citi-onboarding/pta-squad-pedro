@@ -41,6 +41,7 @@ export default function AppointmentPage() {
     status: "available" | "late";
   };
 
+  // This function is responsible to load the data from the data base
   async function loadData() {
     const patientData: rawPatient[] = await getData("patient");
     const appointmentData: rawAppointment[] = await getData("appointment");
@@ -82,12 +83,12 @@ export default function AppointmentPage() {
     loadData();
   }, []);
 
-  // Essa funcão é responsável por setar o valor do filtro com o que está digitado no input, no momento em que o botão é clicado
+  // This function is responsible for setting the filter value to what is typed in the input field when the button is clicked
   const handleSearch = () => {
     setFilteredSearchTerm(searchTerm);
   };
 
-  // Essa função serve para alterar o valor do estado do tipo de filtro de acordo com o botão/filtro selecionado
+ // This function is used to change the state value of the filter type according to the selected button/filter.
   function changeSelectedFilter() {
     if (selectedFilter == "Agendamento") {
       setSelectedFilter("Histórico");
@@ -96,7 +97,7 @@ export default function AppointmentPage() {
     }
   }
 
-  // Essa é a função principal do filtro, primeiro, ela cria um array base de acordo com o filtro escolhido e, em seguida, filtra esse array de acordo com o que foi digitado no input, combinando os dois filtros
+  // This is the main function of the filter; first, it creates a base array according to the chosen filter and then filters this array according to what was typed in the input, combining the two filters.
   const getFilteredAppointments = () => {
     const availableArray = appointmentsList.filter(
       (appointment) => appointment.status == "available"
