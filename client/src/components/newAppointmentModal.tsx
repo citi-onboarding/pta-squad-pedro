@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select"
 
 interface Patient {
-  id: string | number
+  id: number
   patientName: string      
   animalType: string      
   patientAge: number       
