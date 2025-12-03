@@ -1,4 +1,4 @@
-import CardConsulta from "@/components/ui/cardConsulta"
+import CardConsulta from "@/components/appoitmentCard"
 
 export default function Page() {
     return(
