@@ -14,6 +14,7 @@ export default function AppointmentPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSearchTerm, setFilteredSearchTerm] = useState("");
   const [appointmentsList, setAppointmentsList] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   type rawAppointment = {
     id: number;
@@ -50,42 +51,47 @@ export default function AppointmentPage() {
 
   // This function is responsible to load the data from the data base
   async function loadData() {
-    const patientData: rawPatient[] = await getData("patient");
-    const appointmentData: rawAppointment[] = await getData("appointment");
+    try {
+      const patientData: rawPatient[] = await getData("patient");
+      const appointmentData: rawAppointment[] = await getData("appointment");
 
-    let appointmentCardsData: Appointment[] = [];
+      const appointmentCardsData: Appointment[] = appointmentData.map(
+        (appointment) => {
+          const patient = patientData.find(
+            (p) => p.id === appointment.patientId
+          );
 
-    appointmentData.forEach((appointment) => {
-      console.log("Appointment:", appointment);
-      const patient = patientData.find((p) => p.id === appointment.patientId);
+          const datetime = new Date(appointment.appointmentDate);
+          const date = datetime.toLocaleDateString(["pt-BR"], {
+            day: "2-digit",
+            month: "2-digit",
+          });
+          const hour = datetime.toLocaleTimeString(["pt-BR"], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
 
-      const datetime = new Date(appointment.appointmentDate);
-      const date = datetime.toLocaleDateString(["pt-BR"], {
-        day: "2-digit",
-        month: "2-digit",
-      });
-      const hour = datetime.toLocaleTimeString(["pt-BR"], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+          const status = new Date() > datetime ? "late" : "available";
 
-      const status = new Date() > datetime ? "late" : "available";
-      console.log(status);
+          return {
+            id: appointment.id,
+            animalName: patient?.patientName || "Unknown",
+            ownerName: patient?.tutorName || "Unknown",
+            doctorName: appointment.doctorName,
+            date,
+            hour,
+            appointment:
+              appointmentTypeMapping[appointment.appointmentType] ||
+              appointment.appointmentType,
+            status,
+          };
+        }
+      );
 
-      appointmentCardsData.push({
-        id: appointment.id,
-        animalName: patient?.patientName || "Unknown",
-        ownerName: patient?.tutorName || "Unknown",
-        doctorName: appointment.doctorName,
-        date: date,
-        hour: hour,
-        appointment:
-          appointmentTypeMapping[appointment.appointmentType] ||
-          appointment.appointmentType,
-        status: status,
-      });
-    });
-    setAppointmentsList(appointmentCardsData);
+      setAppointmentsList(appointmentCardsData);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -182,8 +188,14 @@ export default function AppointmentPage() {
       </div>
 
       <div className=" mx-28 grid grid-cols-2 gap-6 pb-10">
-        {displayedAppointments.length > 0 ? (
-          displayedAppointments.map((appointment: Appointment) => (
+        {loading ? (
+          <>
+            <div className="col-span-2 text-center text-gray-400 py-10">
+              <p>Carregando...</p>
+            </div>
+          </>
+        ) : displayedAppointments.length > 0 ? (
+          displayedAppointments.map((appointment) => (
             <AppointmentCard key={appointment.id} {...appointment} />
           ))
         ) : (
