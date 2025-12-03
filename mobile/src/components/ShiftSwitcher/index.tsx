@@ -1,9 +1,9 @@
-import { TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View} from "react-native";
 import { MorningIcon, EveningIcon, AfternoonIcon } from "@assets";
 
 export default function ShiftSwitcher() {
     return (
-        <View className="p-3 flex flex-row gap-4 border rounded-[32px]">
+        <View className="bg-white p-5 flex flex-row gap-6 border border-gray-200 rounded-[32px]">
             <TouchableOpacity>
                 <MorningIcon width={18} height={18} />
             </TouchableOpacity>
