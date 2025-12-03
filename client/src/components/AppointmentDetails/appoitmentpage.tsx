@@ -34,22 +34,22 @@ export default function VisualPage({ data, loading, animalImage, onAgendamento, 
                             )}
                             
                             <div className="mt-4 sm:mt-8 text-center sm:text-left lg:ml-[45px]">
-                                <div className="font-[700] text-lg">{data.name}</div> 
-                                <div className="font-[400] text-sm mt-4 lg:mt-[126px]">{data.ownerName}</div> 
-                                <div className="font-[400] text-sm">{data.vetName}</div>
+                                <div className="font-[700] text-lg">{data.patientName}</div> 
+                                <div className="font-[400] text-sm mt-4 lg:mt-[126px]">{data.tutorName}</div> 
+                                <div className="font-[400] text-sm">{data.doctorName}</div>
                             </div>
                         </div>
                         <div className="mt-8 lg:mt-[60px]">
                             <div className="font-[700] text-base mb-2">Descrição do problema:</div>
                             <div className="font-[400] text-base w-full sm:max-w-md lg:max-w-none text-justify">
-                                {data.description}
+                                {data.problemDescription}
                             </div>
                         </div>
 
                         <div className="flex items-center mt-6">
                             <div className="font-[700] text-base mr-4">Tipo de consulta:</div>
                             <div className="px-3 py-1 rounded bg-[#AAE1FF] text-[#292929] font-[400] text-sm">
-                                {data.consultationType}
+                                {data.appointmentType}
                             </div>
                         </div>
 

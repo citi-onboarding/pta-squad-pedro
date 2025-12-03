@@ -22,8 +22,12 @@ export default function IntegrationPage({ params }: IntegrationProps) {
         const load = async () => {
             try {
                 if(!params?.id) return;
-                const response = await getData('patient', params.id);
-                setData(response); // Já não é mais string
+                const appointmentData = await getData('appointment', params.id);
+                const patientData = await getData('patient', appointmentData.patientId);
+                const appointmentArray = patientData.value
+
+                console.log("Fetched data:", appointmentData.value);
+                setData(appointmentData); // Já não é mais string
             } catch (e) {
                 console.error("Error loading data:", e);
             } finally {
