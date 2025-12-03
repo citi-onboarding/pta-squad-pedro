@@ -8,7 +8,7 @@ import VacaImg from "@/assets/vaca.svg";
 import CavaloImg from "@/assets/cavalo.svg";
 import OvelhaImg from "@/assets/ovelha.svg";
 import PorcoImg from "@/assets/porco.svg";
-import VisualPage from "../../components/AppointmentDetails/appoitmentpage"; 
+import VisualPage from "@/components/AppointmentDetails/appoitmentpage"; 
 
 interface IntegrationProps {
     params: { id: string };
@@ -23,9 +23,9 @@ export default function IntegrationPage({ params }: IntegrationProps) {
             try {
                 if(!params?.id) return;
                 const response = await getData('patient', params.id);
-                const parsedData = typeof response === 'string' ? JSON.parse(response) : response;
-                setData(parsedData);
+                setData(response); // Já não é mais string
             } catch (e) {
+                console.error("Error loading data:", e);
             } finally {
                 setLoading(false);
             }
@@ -37,30 +37,41 @@ export default function IntegrationPage({ params }: IntegrationProps) {
         if (!data) return;
         try {
             await postData('appointment', { 
-                patientId: data.id, 
-                date: new Date().toISOString() 
+                patientId: data.id,
+                appointmentType: "RETURN", // Campo obrigatório
+                appointmentDate: new Date().toISOString(),
+                doctorName: "Dr. TBD" // Campo obrigatório
             });
         } catch (e) {
+            console.error("Error creating appointment:", e);
         }
     };
 
     const getAnimalImage = () => {
-        if (!data || !data.type) return null; 
+        if (!data || !data.animalType) return null; 
 
-        const tipo = data.type.toLowerCase().trim();
+        const tipo = data.animalType.toUpperCase(); // Use animalType conforme schema
 
-        if (tipo === 'cachorro' || tipo === 'dog') return CachorroImg;
-        if (tipo === 'gato' || tipo === 'cat') return GatoImg; 
-        if (tipo === 'vaca' || tipo === 'cow') return VacaImg;
-        if (tipo === 'cavalo' || tipo === 'horse') return CavaloImg;
-        if (tipo === 'ovelha' || tipo === 'sheep') return OvelhaImg;
-        if (tipo === 'porco' || tipo === 'pig') return PorcoImg;
+        if (tipo === 'DOG') return CachorroImg;
+        if (tipo === 'CAT') return GatoImg; 
+        if (tipo === 'COW') return VacaImg;
+        if (tipo === 'HORSE') return CavaloImg;
+        if (tipo === 'SHEEP') return OvelhaImg;
+        if (tipo === 'PIG') return PorcoImg;
         
         return null; 
     };
 
+    if (loading) return <div>Loading...</div>;
+    if (!data) return <div>No data found</div>;
+
     return (
-        <VisualPage data={data}loading={loading}animalImage={getAnimalImage()} onAgendamento={handleAgendamento}onBack={() => 
-          window.history.back()}/>
+        <VisualPage 
+            data={data}
+            loading={loading}
+            animalImage={getAnimalImage()} 
+            onAgendamento={handleAgendamento}
+            onBack={() => window.history.back()}
+        />
     );
 }
