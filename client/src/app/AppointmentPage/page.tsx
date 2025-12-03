@@ -41,6 +41,13 @@ export default function AppointmentPage() {
     status: "available" | "late";
   };
 
+  const appointmentTypeMapping: Record<string, string> = {
+    VACCINATION: "Vacinação",
+    CHECKUP: "Check-up",
+    FIRST: "Primeira Consulta",
+    RETURN: "Retorno",
+  };
+
   // This function is responsible to load the data from the data base
   async function loadData() {
     const patientData: rawPatient[] = await getData("patient");
@@ -72,7 +79,9 @@ export default function AppointmentPage() {
         doctorName: appointment.doctorName,
         date: date,
         hour: hour,
-        appointment: appointment.appointmentType.toString(),
+        appointment:
+          appointmentTypeMapping[appointment.appointmentType] ||
+          appointment.appointmentType,
         status: status,
       });
     });
@@ -88,7 +97,7 @@ export default function AppointmentPage() {
     setFilteredSearchTerm(searchTerm);
   };
 
- // This function is used to change the state value of the filter type according to the selected button/filter.
+  // This function is used to change the state value of the filter type according to the selected button/filter.
   function changeSelectedFilter() {
     if (selectedFilter == "Agendamento") {
       setSelectedFilter("Histórico");

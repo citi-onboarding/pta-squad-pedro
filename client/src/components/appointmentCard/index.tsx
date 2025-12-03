@@ -10,12 +10,7 @@ type AppointmentCardProps = {
   doctorName: string;
   date: string;
   hour: string;
-  appointment:
-    | "Primeira Consulta"
-    | "Retorno"
-    | "Vacinação"
-    | "Check-up"
-    | string;
+  appointment: string;
   status: "available" | "late" | string;
 };
 
@@ -28,16 +23,16 @@ function getBackgroundColor(
   }
 
   switch (appointment) {
-    case "FIRST":
+    case "Primeira Consulta":
       return "bg-[#BFB5FF]";
 
-    case "RETURN":
+    case "Retorno":
       return "bg-[#FF641999]";
 
-    case "VACCINATION":
+    case "Vacinação":
       return "bg-[#AAE1FF]";
 
-    case "CHECKUP":
+    case "Check-up":
       return "bg-[#9CFF95]";
 
     default:
