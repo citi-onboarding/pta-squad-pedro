@@ -103,7 +103,7 @@ export default function AppointmentPage() {
       (appointment) => appointment.status == "available"
     );
     const lateArray = appointmentsList.filter(
-      (appointment) => appointment.status == "available"
+      (appointment) => appointment.status == "late"
     );
 
     const baseArray =
