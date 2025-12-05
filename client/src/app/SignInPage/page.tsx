@@ -235,7 +235,7 @@ export default function SignupPage() {
                     <div onChange={(e: any) => setFormData({...formData, date: e.target.value})}>
                          <ModalDatePicker 
                             className="w-full h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
-                            placeholder="Data"
+                            placeholder="dd/mm/aa"
                          />
                     </div>
                 </div>
