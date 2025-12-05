@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getData, postData } from "@/api";
+import { getData } from "@/api";
 
 import GatoImg from "@/assets/gato.svg";
 import CachorroImg from "@/assets/cachorro.svg";
@@ -22,41 +22,32 @@ export default function IntegrationPage(id: string) {
     const [patientData, setPatientData] = useState<any>(null);
     const [historyAppointment, setHistoryAppointment] = useState<any[]>([]);
 
-
     useEffect(() => {
         const load = async () => {
             try {
-                if (id) return;
+                if (!id) return; 
 
-                const appointmentData = await getData("appointment", id)
-                const patientId = appointmentData.value.patientId;
-                const patientData = await getData("patient", patientId);
+                const appointmentRes = await getData("appointment", id);
+                const patientId = appointmentRes.value.patientId;
+                const patientRes = await getData("patient", patientId);
 
-                console.log("Appointment Data", appointmentData.value)
-                console.log("Patient Data", patientData.value)
-                if (!patientData) {
-                    setPatientData(patientData.value);
-                }
-                setAppointmentData(appointmentData.value)
+                setPatientData(patientRes.value);
+                setAppointmentData(appointmentRes.value);
 
                 const allAppointments = (await getData("appointment")) || [];
-
                 const historyData = allAppointments
                     .filter((appt: any) => appt?.patientId === patientId)
                     .map((appt: any) => {
                         const datetime = new Date(appt.appointmentDate);
-                        const historyCardData: CardContent = {
+                        return {
                             date: datetime.toLocaleDateString(["pt-BR"], { day: "2-digit", month: "2-digit" }),
                             time: datetime.toLocaleTimeString(["pt-BR"], { hour: "2-digit", minute: "2-digit" }),
                             doctor: appt.doctorName,
                             type: appt.appointmentType
-                        }
+                        };
+                    });
 
-                        return historyCardData;
-                    })
-
-                setHistoryAppointment(historyData)
-                console.log("History Cards Data", historyData)
+                setHistoryAppointment(historyData);
             } catch (error) {
                 console.error("Error loading data:", error);
             }
@@ -65,17 +56,15 @@ export default function IntegrationPage(id: string) {
         load();
     }, [id]);
 
-    const AnimalImage = () => {
-        if (!patientData || !patientData.animalType) return null;
-        const tipo = patientData.animalType.toUpperCase();
-        if (tipo === "DOG") return CachorroImg;
-        if (tipo === "CAT") return GatoImg;
-        if (tipo === "COW") return VacaImg;
-        if (tipo === "HORSE") return CavaloImg;
-        if (tipo === "SHEEP") return OvelhaImg;
-        if (tipo === "PIG") return PorcoImg;
-        return null;
-    };
+    const AnimalImage = patientData?.animalType ? (
+        patientData.animalType.toUpperCase() === "DOG" ? CachorroImg :
+        patientData.animalType.toUpperCase() === "CAT" ? GatoImg :
+        patientData.animalType.toUpperCase() === "COW" ? VacaImg :
+        patientData.animalType.toUpperCase() === "HORSE" ? CavaloImg :
+        patientData.animalType.toUpperCase() === "SHEEP" ? OvelhaImg :
+        patientData.animalType.toUpperCase() === "PIG" ? PorcoImg :
+        null
+    ) : null;
 
-    return [patientData, appointmentData, historyAppointment, AnimalImage]
-};
+    return [patientData, appointmentData, historyAppointment, AnimalImage];
+}
