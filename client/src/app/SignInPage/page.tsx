@@ -8,8 +8,8 @@ import { ChevronLeft } from "lucide-react"
 import Header from "@/components/ui/header"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/button"
-import { ModalDatePicker } from "@/components/ui/ModalDatePicker" 
-import { TimePicker } from "@/components/ui/TimePicker"   
+import { ModalDatePicker } from "@/components/ui/ModalDatePicker"
+import { TimePicker } from "@/components/ui/TimePicker"
 import ovelhaImg from "@/assets/ovelha.svg"
 import gatoImg from "@/assets/gato.svg"
 import porcoImg from "@/assets/porco.svg"
@@ -24,85 +24,81 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-
 import { postData } from "@/api"
+
+type AnimalType = "DOG" | "CAT" | "PIG" | "COW" | "SHEEP" | "HORSE"
+type AppointmentType = "FIRST" | "RETURN" | "CHECKUP" | "VACCINATION"
 
 export default function SignupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  
   const [formData, setFormData] = useState({
     tutorName: "",
     patientName: "",
-    species: "",
+    species: "" as AnimalType | "", 
     age: "",
-    appointmentType: "",
+    appointmentType: "" as AppointmentType | "", 
     doctorName: "",
-    date: "", 
-    time: "", 
+    date: "",
+    time: "",
     description: "",
   })
 
-  
-    const speciesOptions = [
-    { label: "Ovelha",   img: ovelhaImg },
-    { label: "Gato",     img: gatoImg },
-    { label: "Porco",    img: porcoImg },
-    { label: "Vaca",     img: vacaImg },
-    { label: "Cavalo",   img: cavaloImg },
-    { label: "Cachorro", img: cachorroImg },
+
+  const speciesOptions = [
+    { label: "SHEEP", img: ovelhaImg },
+    { label: "CAT", img: gatoImg },
+    { label: "PIG", img: porcoImg },
+    { label: "COW", img: vacaImg },
+    { label: "HORSE", img: cavaloImg },
+    { label: "DOG", img: cachorroImg },
   ]
 
-  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, appointmentType: value }))
+    setFormData((prev) => ({ ...prev, appointmentType: value as AppointmentType }))
   }
+
   const handleSpeciesSelect = (selected: string) => {
-    setFormData((prev) => ({ ...prev, species: selected }))
+    setFormData((prev) => ({ ...prev, species: selected as AnimalType }))
   }
+
   const finalizaCadastro = async () => {
-    
-    if (!formData.tutorName || !formData.patientName || !formData.date) {
-        alert("Preencha os dados obrigatórios.")
-        return
+    if (!formData.tutorName || !formData.patientName || !formData.date || !formData.species || !formData.appointmentType) {
+      alert("Preencha os dados obrigatórios.")
+      return
     }
 
     setLoading(true)
 
     try {
-      
-      const userPayload = { name: formData.tutorName }
-      const userResponse = await postData("user", userPayload)
-      
-      const userId = userResponse?.id
-      if (!userId) throw new Error("Error.")
-
     
+      const combinedDateTimeString = `${formData.date}T${formData.time}:00`
+      const appointmentDate = new Date(combinedDateTimeString)
+
       const patientPayload = {
-        name: formData.patientName,
-        species: formData.species,
-        age: formData.age, 
-        ownerId: userId, 
+        patientName: formData.patientName,
+        patientAge: parseInt(formData.age), 
+        tutorName: formData.tutorName,      
+        problemDescription: formData.description,
+        animalType: formData.species,       
       }
+
       const patientResponse = await postData("patient", patientPayload)
-      
       const patientId = patientResponse?.id
+
       if (!patientId) throw new Error("Erro.")
 
-      
       const appointmentPayload = {
-        patientId: patientId,
+        appointmentType: formData.appointmentType, 
+        appointmentDate: appointmentDate.toISOString(), 
         doctorName: formData.doctorName,
-        appointmentType: formData.appointmentType,
-        date: formData.date, 
-        time: formData.time, 
-        description: formData.description,
+        patientId: patientId,
       }
 
       await postData("appointment", appointmentPayload)
@@ -111,8 +107,8 @@ export default function SignupPage() {
       router.push("/")
 
     } catch (error) {
-      console.error("Erro.", error)
-      alert("Erro.")
+      console.error("Erro no cadastro:", error)
+      alert("Ocorreu um erro ao realizar o cadastro. Verifique os dados.")
     } finally {
       setLoading(false)
     }
@@ -122,7 +118,6 @@ export default function SignupPage() {
     <div className="min-h-screen bg-white pb-20">
       <Header />
 
-      
       <div className="flex flex-row px-24 gap-4 py-8 items-center">
         <Link href="/">
           <button>
@@ -132,12 +127,9 @@ export default function SignupPage() {
         <h1 className="text-4xl font-bold">Cadastro</h1>
       </div>
 
-      
       <div className="mx-28 bg-white rounded-[24px] p-[0px] shadow-sm flex flex-col gap-[29px]">
         
-        
         <div className="flex flex-col gap-[12px]">
-            
             
             <div className="flex flex-row gap-[24px]">
                 <div className="flex flex-col w-1/2 gap-[12px]">
@@ -162,14 +154,11 @@ export default function SignupPage() {
                 </div>
             </div>
 
-            
             <div className="flex flex-col gap-[12px] mt-2"> 
                 <span className="text-[16px] font-[700]">Qual é a espécie do paciente?</span> 
                 
-                
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 w-fit">
                     {speciesOptions.map((option) => {
-                    
                     const isSelected = formData.species === option.label
 
                     return (
@@ -185,7 +174,6 @@ export default function SignupPage() {
                             }
                         `}
                         >
-                        
                         <div className="relative w-20 h-20 mb-1">
                             <Image
                             src={option.img}
@@ -195,14 +183,12 @@ export default function SignupPage() {
                             sizes="w-120px h-120px"
                             />
                         </div>
-
                     </button>
                     )
                     })}
                 </div>
             </div>
 
-            
             <div className="flex flex-row gap-[24px] mt-2">
                 <div className="flex flex-col w-1/2 gap-[12px]">
                     <span className="text-[16px] font-[700]">Idade do Paciente</span>
@@ -216,7 +202,6 @@ export default function SignupPage() {
                     />
                 </div>
                 
-                
                 <div className="flex flex-col w-1/2 gap-[12px]">
                     <span className="text-[16px] font-[700]">Tipo de consulta</span>
                     <Select onValueChange={handleSelectChange}>
@@ -224,16 +209,15 @@ export default function SignupPage() {
                             <SelectValue placeholder="Selecione aqui" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="primeira consulta">Primeira Consulta</SelectItem>
-                            <SelectItem value="retorno">Retorno</SelectItem>
-                            <SelectItem value="check-up">Check-up</SelectItem>
-                            <SelectItem value="vacinação">Vacinação</SelectItem>
+                            <SelectItem value="FIRST">Primeira Consulta</SelectItem>
+                            <SelectItem value="RETURN">Retorno</SelectItem>
+                            <SelectItem value="CHECKUP">Check-up</SelectItem>
+                            <SelectItem value="VACCINATION">Vacinação</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
             </div>
 
-            
             <div className="flex flex-row gap-[24px] mt-2">
                 <div className="flex flex-col w-1/3 gap-[12px]">
                     <span className="text-[16px] font-[700]">Médico Responsável</span>
@@ -246,18 +230,16 @@ export default function SignupPage() {
                     />
                 </div>
                 
-                
                 <div className="flex flex-col w-1/3 gap-[12px]">
                     <span className="text-[16px] font-[700]">Data do atendimento</span>
                     <div onChange={(e: any) => setFormData({...formData, date: e.target.value})}>
                          <ModalDatePicker 
                             className="w-full h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
-                            placeholder="dd/mm/aa"
+                            placeholder="Data"
                          />
                     </div>
                 </div>
 
-                
                 <div className="flex flex-col w-1/3 gap-[12px]">
                     <span className="text-[16px] font-[700]">Horário do Atendimento</span>
                     <div onChange={(e: any) => setFormData({...formData, time: e.target.value})}>
@@ -269,7 +251,6 @@ export default function SignupPage() {
                 </div>
             </div>
 
-            
             <div className="flex flex-col gap-[12px] mt-2">
                 <span className="text-[16px] font-[700]">Descrição do Problema</span>
                 <textarea
@@ -283,7 +264,6 @@ export default function SignupPage() {
             </div>
         </div>
 
-        
         <div className="flex items-center justify-end mt-4">
             <Button
                 type="button"
