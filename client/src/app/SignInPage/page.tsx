@@ -69,7 +69,7 @@ export default function SignupPage() {
   const finalizaCadastro = async () => {
     
     if (!formData.tutorName || !formData.patientName || !formData.date) {
-        alert("Por favor, preencha os dados obrigatórios.")
+        alert("Preencha os dados obrigatórios.")
         return
     }
 
@@ -81,7 +81,7 @@ export default function SignupPage() {
       const userResponse = await postData("user", userPayload)
       
       const userId = userResponse?.id
-      if (!userId) throw new Error("Erro ao gerar ID do Tutor.")
+      if (!userId) throw new Error("Error.")
 
     
       const patientPayload = {
@@ -93,7 +93,7 @@ export default function SignupPage() {
       const patientResponse = await postData("patient", patientPayload)
       
       const patientId = patientResponse?.id
-      if (!patientId) throw new Error("Erro ao gerar ID do Paciente.")
+      if (!patientId) throw new Error("Erro.")
 
       
       const appointmentPayload = {
@@ -108,11 +108,11 @@ export default function SignupPage() {
       await postData("appointment", appointmentPayload)
 
       alert("Cadastro realizado com sucesso!")
-      router.push("/") // acertar a rota dps
+      router.push("/")
 
     } catch (error) {
-      console.error("Erro no fluxo de cadastro:", error)
-      alert("Houve um erro ao salvar os dados. Verifique o console.")
+      console.error("Erro.", error)
+      alert("Erro.")
     } finally {
       setLoading(false)
     }
@@ -167,7 +167,7 @@ export default function SignupPage() {
                 <span className="text-[16px] font-[700]">Qual é a espécie do paciente?</span> 
                 
                 
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 w-fit">
                     {speciesOptions.map((option) => {
                     
                     const isSelected = formData.species === option.label
@@ -178,28 +178,24 @@ export default function SignupPage() {
                         type="button" 
                         onClick={() => handleSpeciesSelect(option.label)}
                         className={`
-                            flex flex-col items-center justify-center p-3 rounded-[16px] border-2 transition-all
+                            flex flex-col items-center justify-center p-8 rounded-[16px] transition-all
                             ${isSelected 
-                            ? "border-[#50E678] bg-[#50E678]/10 scale-105 shadow-md" 
-                            : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50" 
+                            ? "bg-[#D9D9D9]"
+                            : "bg-white" 
                             }
                         `}
                         >
                         
-                        <div className="relative w-12 h-12 mb-2">
+                        <div className="relative w-16 h-16 mb-1">
                             <Image
                             src={option.img}
                             alt={option.label}
                             fill 
                             className="object-contain" 
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            sizes="w-120px h-120px"
                             />
                         </div>
 
-                        
-                        <span className={`text-sm font-semibold ${isSelected ? "text-green-700" : "text-gray-600"}`}>
-                            {option.label} 
-                        </span>
                     </button>
                     )
                     })}
@@ -293,7 +289,7 @@ export default function SignupPage() {
                 type="button"
                 onClick={finalizaCadastro}
                 disabled={loading}
-                className="w-full max-w-[400px] h-[42px] rounded-[24px] bg-[#50E678] text-white flex items-center justify-center hover:bg-[#45cf6a] font-bold text-lg"
+                className="w-full max-w-[400px] h-[42px] rounded-[24px] bg-[#50E678] text-white flex items-center justify-center hover:bg-[#45cf6a] text-lg"
             >
                 {loading ? "Cadastrando..." : "Finalizar cadastro"}
             </Button>

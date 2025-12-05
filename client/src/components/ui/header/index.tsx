@@ -3,8 +3,10 @@ import { LogoCITiPet } from "@/assets";
 import { CiTiMessage } from "@/assets";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter();
   const [selectedService, setSelectedService] = useState("Atendimento");
 
   return (
@@ -20,7 +22,12 @@ export default function Header() {
       </div>
       <div className="flex gap-6 items-center">
         <button
-          onClick={() => setSelectedService("Atendimento")}
+          onClick={
+            () => {
+              setSelectedService("Atendimento");
+              router.push("/AppointmentPage");
+            }
+          }
           className={`hover:text-[#50E678] transition-colors duration-300 pb-1 border-b-2 ${
             selectedService === "Atendimento"
               ? "border-[#50E678] hover:text-black"
@@ -30,7 +37,10 @@ export default function Header() {
           Atendimento
         </button>
         <button
-          onClick={() => setSelectedService("Cadastro")}
+          onClick={() => {
+            setSelectedService("Cadastro");
+            router.push("/SignInPage");
+          }}
           className={`hover:text-[#50E678] transition-colors duration-300 pb-1 border-b-2 ${
             selectedService === "Cadastro"
               ? "border-[#50E678] hover:text-black"
