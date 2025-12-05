@@ -11,24 +11,26 @@ class EmailController {
 
     try {
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        secure: false, // porta 587
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
         },
       });
 
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.SMTP_USER,
         to,
         subject,
         text,
       });
 
       return response.status(200).send({ message: "Email enviado com sucesso!" });
-    } catch (error) {
-      console.error(error);
-      return response.status(500).send({ error: "Erro ao enviar o email" });
+    } catch (error: any) {
+      console.error("ERRO SMTP:", error);
+      return response.status(500).send({ error: "Erro ao enviar o email", details: error.message });
     }
   };
 }
