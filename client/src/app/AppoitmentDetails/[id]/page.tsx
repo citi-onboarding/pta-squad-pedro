@@ -81,7 +81,7 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
 
                     <div className="w-full">
                         <div className="font-[700] text-xl mb-4">Histórico de Consultas</div>
-                        <div className="w-full lg:w-[558px] rounded-3xl border border-[#D9D9D9] p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="w-full h-auto lg:w-[558px] lg:h-[448px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 space-y-4 overflow-y-auto">
                             {historyData && historyData.length > 0 ? (
                                 historyData.map((item: any, idx: number) => (
                                     <div key={idx} className="w-full h-full">
@@ -89,7 +89,7 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-sm text-gray-500 text-center mt-2 col-span-2">
+                                <div className="text-sm text-gray-500 text-center mt-4">
                                     Nenhum histórico encontrado
                                 </div>
                             )}
