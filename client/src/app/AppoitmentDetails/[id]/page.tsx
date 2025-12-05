@@ -9,7 +9,7 @@ import IntegrationPage from "@/components/AppointmentDetails/appontmentDetailsDa
 import Header from "@/components/ui/header";
 
 interface PatientViewProps {
-    params:{id: string}; 
+    params: { id: string }; 
     onAgendamento: () => void; 
     onBack: () => void;    
 }
@@ -81,13 +81,17 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
 
                     <div className="w-full">
                         <div className="font-[700] text-xl mb-4">Histórico de Consultas</div>
-                        <div className="w-full lg:w-[558px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="w-full lg:w-[558px] rounded-3xl border border-[#D9D9D9] p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {historyData && historyData.length > 0 ? (
                                 historyData.map((item: any, idx: number) => (
-                                    <AppoitmentCard key={idx} {...item} />
+                                    <div key={idx} className="w-full h-full">
+                                        <AppoitmentCard {...item} />
+                                    </div>
                                 ))
                             ) : (
-                                <div className="text-sm text-gray-500 text-center mt-2 col-span-2">Nenhum histórico encontrado</div>
+                                <div className="text-sm text-gray-500 text-center mt-2 col-span-2">
+                                    Nenhum histórico encontrado
+                                </div>
                             )}
                         </div>
                     </div>
