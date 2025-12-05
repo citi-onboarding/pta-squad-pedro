@@ -1,0 +1,305 @@
+"use client"
+
+import React, { useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import { ChevronLeft } from "lucide-react"
+import Header from "@/components/ui/header"
+import { Input } from "@/components/ui/Input"
+import { Button } from "@/components/ui/button"
+import { ModalDatePicker } from "@/components/ui/ModalDatePicker" 
+import { TimePicker } from "@/components/ui/TimePicker"   
+import ovelhaImg from "@/assets/ovelha.svg"
+import gatoImg from "@/assets/gato.svg"
+import porcoImg from "@/assets/porco.svg"
+import vacaImg from "@/assets/vaca.svg"
+import cavaloImg from "@/assets/cavalo.svg"
+import cachorroImg from "@/assets/cachorro.svg"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
+import { postData } from "@/api"
+
+export default function SignupPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  
+  const [formData, setFormData] = useState({
+    tutorName: "",
+    patientName: "",
+    species: "",
+    age: "",
+    appointmentType: "",
+    doctorName: "",
+    date: "", 
+    time: "", 
+    description: "",
+  })
+
+  
+    const speciesOptions = [
+    { label: "Ovelha",   img: ovelhaImg },
+    { label: "Gato",     img: gatoImg },
+    { label: "Porco",    img: porcoImg },
+    { label: "Vaca",     img: vacaImg },
+    { label: "Cavalo",   img: cavaloImg },
+    { label: "Cachorro", img: cachorroImg },
+  ]
+
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, appointmentType: value }))
+  }
+  const handleSpeciesSelect = (selected: string) => {
+    setFormData((prev) => ({ ...prev, species: selected }))
+  }
+  const finalizaCadastro = async () => {
+    
+    if (!formData.tutorName || !formData.patientName || !formData.date) {
+        alert("Por favor, preencha os dados obrigatórios.")
+        return
+    }
+
+    setLoading(true)
+
+    try {
+      
+      const userPayload = { name: formData.tutorName }
+      const userResponse = await postData("user", userPayload)
+      
+      const userId = userResponse?.id
+      if (!userId) throw new Error("Erro ao gerar ID do Tutor.")
+
+    
+      const patientPayload = {
+        name: formData.patientName,
+        species: formData.species,
+        age: formData.age, 
+        ownerId: userId, 
+      }
+      const patientResponse = await postData("patient", patientPayload)
+      
+      const patientId = patientResponse?.id
+      if (!patientId) throw new Error("Erro ao gerar ID do Paciente.")
+
+      
+      const appointmentPayload = {
+        patientId: patientId,
+        doctorName: formData.doctorName,
+        appointmentType: formData.appointmentType,
+        date: formData.date, 
+        time: formData.time, 
+        description: formData.description,
+      }
+
+      await postData("appointment", appointmentPayload)
+
+      alert("Cadastro realizado com sucesso!")
+      router.push("/") // acertar a rota dps
+
+    } catch (error) {
+      console.error("Erro no fluxo de cadastro:", error)
+      alert("Houve um erro ao salvar os dados. Verifique o console.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-white pb-20">
+      <Header />
+
+      
+      <div className="flex flex-row px-24 gap-4 py-8 items-center">
+        <Link href="/">
+          <button>
+            <ChevronLeft size={38} />
+          </button>
+        </Link>
+        <h1 className="text-4xl font-bold">Cadastro</h1>
+      </div>
+
+      
+      <div className="mx-28 bg-white rounded-[24px] p-[0px] shadow-sm flex flex-col gap-[29px]">
+        
+        
+        <div className="flex flex-col gap-[12px]">
+            
+            
+            <div className="flex flex-row gap-[24px]">
+                <div className="flex flex-col w-1/2 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Nome do Paciente</span>
+                    <Input
+                        name="patientName"
+                        value={formData.patientName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] rounded-[8px] border border-[#101010] bg-white px-3 text-base placeholder:text-gray-400 focus:ring-0"
+                        placeholder="Digite aqui..."
+                    />
+                </div>
+                <div className="flex flex-col w-1/2 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Nome do Tutor</span>
+                    <Input
+                        name="tutorName"
+                        value={formData.tutorName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] rounded-[8px] border border-[#101010] bg-white px-3 text-base placeholder:text-gray-400 focus:ring-0"
+                        placeholder="Digite aqui..."
+                    />
+                </div>
+            </div>
+
+            
+            <div className="flex flex-col gap-[12px] mt-2"> 
+                <span className="text-[16px] font-[700]">Qual é a espécie do paciente?</span> 
+                
+                
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+                    {speciesOptions.map((option) => {
+                    
+                    const isSelected = formData.species === option.label
+
+                    return (
+                    <button
+                        key={option.label}
+                        type="button" 
+                        onClick={() => handleSpeciesSelect(option.label)}
+                        className={`
+                            flex flex-col items-center justify-center p-3 rounded-[16px] border-2 transition-all
+                            ${isSelected 
+                            ? "border-[#50E678] bg-[#50E678]/10 scale-105 shadow-md" 
+                            : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50" 
+                            }
+                        `}
+                        >
+                        
+                        <div className="relative w-12 h-12 mb-2">
+                            <Image
+                            src={option.img}
+                            alt={option.label}
+                            fill 
+                            className="object-contain" 
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
+
+                        
+                        <span className={`text-sm font-semibold ${isSelected ? "text-green-700" : "text-gray-600"}`}>
+                            {option.label} 
+                        </span>
+                    </button>
+                    )
+                    })}
+                </div>
+            </div>
+
+            
+            <div className="flex flex-row gap-[24px] mt-2">
+                <div className="flex flex-col w-1/2 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Idade do Paciente</span>
+                    <Input
+                        name="age"
+                        value={formData.age}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] rounded-[8px] border border-[#101010] bg-white px-3 text-base placeholder:text-gray-400 focus:ring-0"
+                        placeholder="Digite aqui..."
+                        type="number"
+                    />
+                </div>
+                
+                
+                <div className="flex flex-col w-1/2 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Tipo de consulta</span>
+                    <Select onValueChange={handleSelectChange}>
+                        <SelectTrigger className="w-full h-[50px] bg-white rounded-[8px] border border-[#101010] px-3 text-base data-[placeholder]:text-gray-400">
+                            <SelectValue placeholder="Selecione aqui" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="primeira consulta">Primeira Consulta</SelectItem>
+                            <SelectItem value="retorno">Retorno</SelectItem>
+                            <SelectItem value="check-up">Check-up</SelectItem>
+                            <SelectItem value="vacinação">Vacinação</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            
+            <div className="flex flex-row gap-[24px] mt-2">
+                <div className="flex flex-col w-1/3 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Médico Responsável</span>
+                    <Input
+                        name="doctorName"
+                        value={formData.doctorName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] rounded-[8px] border border-[#101010] bg-white px-3 text-base placeholder:text-gray-400 focus:ring-0"
+                        placeholder="Digite aqui..."
+                    />
+                </div>
+                
+                
+                <div className="flex flex-col w-1/3 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Data do atendimento</span>
+                    <div onChange={(e: any) => setFormData({...formData, date: e.target.value})}>
+                         <ModalDatePicker 
+                            className="w-full h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
+                            placeholder="dd/mm/aa"
+                         />
+                    </div>
+                </div>
+
+                
+                <div className="flex flex-col w-1/3 gap-[12px]">
+                    <span className="text-[16px] font-[700]">Horário do Atendimento</span>
+                    <div onChange={(e: any) => setFormData({...formData, time: e.target.value})}>
+                        <TimePicker 
+                             className="w-full h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
+                             placeholder="00:00"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            
+            <div className="flex flex-col gap-[12px] mt-2">
+                <span className="text-[16px] font-[700]">Descrição do Problema</span>
+                <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full rounded-[8px] border border-[#101010] bg-white p-3 text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none"
+                    placeholder="Digite aqui..."
+                />
+            </div>
+        </div>
+
+        
+        <div className="flex items-center justify-end mt-4">
+            <Button
+                type="button"
+                onClick={finalizaCadastro}
+                disabled={loading}
+                className="w-full max-w-[400px] h-[42px] rounded-[24px] bg-[#50E678] text-white flex items-center justify-center hover:bg-[#45cf6a] font-bold text-lg"
+            >
+                {loading ? "Cadastrando..." : "Finalizar cadastro"}
+            </Button>
+        </div>
+
+      </div>
+    </div>
+  )
+}
