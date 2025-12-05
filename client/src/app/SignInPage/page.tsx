@@ -186,7 +186,7 @@ export default function SignupPage() {
                         `}
                         >
                         
-                        <div className="relative w-16 h-16 mb-1">
+                        <div className="relative w-20 h-20 mb-1">
                             <Image
                             src={option.img}
                             alt={option.label}
