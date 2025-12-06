@@ -1,4 +1,4 @@
-import TimePicker from "@/components/ui/TimePicker"; 
+import { TimePicker } from "@/components/ui/TimePicker"; 
 
 export default function Home() {
   return (
