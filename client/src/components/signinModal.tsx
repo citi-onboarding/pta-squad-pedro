@@ -10,9 +10,40 @@ import { Input } from "@/components/ui/Input"
 export default function SigninModal() {
 
   const [open, setOpen] = React.useState(true)   
+  const [email, setEmail] = React.useState("");
 
-  function enviar() {
-    
+  async function enviar() {
+    if (!email) {
+      alert("Digite um e-mail!");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: email,
+          subject: "Comprovante de Cadastro",
+          text: "Seu cadastro foi concluído com sucesso!",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("E-mail enviado com sucesso!");
+        setOpen(false);
+      } else {
+        alert("Erro ao enviar: " + data.error);
+      }
+
+    } catch (error) {
+      alert("Erro de conexão com o servidor.");
+      console.error(error);
+    }
   }
 
   if (!open) return null  
@@ -46,6 +77,8 @@ export default function SigninModal() {
         <Input
           className="w-[312px] h-[50px] rounded-[8px] border border-[#101010] placeholder:text-gray-400"
           placeholder="Digite aqui..."
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
