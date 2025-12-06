@@ -10,5 +10,7 @@ import Porco from "./porco.svg";
 import Calendario from "./calendar_month.svg"
 import Seta from "./seta.svg"
 import BotãoX from "./Botãoclose.svg"
+import SetaSimples from "./simpleseta.svg"
+import Check from "./task_alt.svg"
 
-export { LogoCITi, Cachorro, Gato, Cavalo, Vaca, Ovelha, Porco, LogoCITiPet, CiTiMessage, Calendario, Seta, BotãoX };
+export { LogoCITi, Cachorro, Gato, Cavalo, Vaca, Ovelha, Porco, LogoCITiPet, CiTiMessage, Calendario, Seta, BotãoX, SetaSimples, Check };

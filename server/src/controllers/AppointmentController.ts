@@ -10,7 +10,7 @@ class AppointmentController implements Crud {
       appointmentType,
       appointmentDate,
       doctorName,
-      patientId
+      patientId,
     );
     if (isAnyUndefined) return response.status(400).send();
 
