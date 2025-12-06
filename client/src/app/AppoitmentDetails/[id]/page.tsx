@@ -8,16 +8,18 @@ import { Button } from "@/components/ui/button";
 import IntegrationPage from "@/components/AppointmentDetails/appontmentDetailsData";
 import Header from "@/components/ui/header";
 
-interface PatientViewProps {
-    params: { id: string };
-    onAgendamento: () => void;
-    onBack: () => void;
-}
-
-export default function VisualPage({ params, onAgendamento, onBack }: PatientViewProps) {
+export default function VisualPage({ params }: { params: { id: string } }) {
     const id = params.id;
     const [patientData, appointmentData, historyData, AnimalImage] = IntegrationPage(id);
 
+    const onBack = () => {
+        window.history.back();
+    };
+
+    const onAgendamento = () => {
+        console.log("Agendamento clicked");
+    };
+    
     return (
         <div className="w-full min-h-screen">
             <Header />
