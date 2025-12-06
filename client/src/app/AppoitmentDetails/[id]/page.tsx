@@ -9,9 +9,9 @@ import IntegrationPage from "@/components/AppointmentDetails/appontmentDetailsDa
 import Header from "@/components/ui/header";
 
 interface PatientViewProps {
-    params: { id: string }; 
-    onAgendamento: () => void; 
-    onBack: () => void;    
+    params: { id: string };
+    onAgendamento: () => void;
+    onBack: () => void;
 }
 
 export default function VisualPage({ params, onAgendamento, onBack }: PatientViewProps) {
@@ -19,7 +19,7 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
     const [patientData, appointmentData, historyData, AnimalImage] = IntegrationPage(id);
 
     return (
-        <div className="w-full min-h-screen"> 
+        <div className="w-full min-h-screen">
             <Header />
             <div className="px-4 sm:px-8 xl:px-44 2xl:px-72 pt-6 pb-16">
 
@@ -35,19 +35,19 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
                         <div className="flex flex-col sm:flex-row items-center sm:items-start mb-4">
 
                             {AnimalImage && (
-                                <Image src={AnimalImage} alt="Animal" width={180} height={180} 
-                                className="w-36 h-36 sm:w-40 sm:h-40 lg:w-44 lg:h-44 sm:mr-6 object-contain"/>
+                                <Image src={AnimalImage} alt="Animal" width={180} height={180}
+                                    className="w-36 h-36 sm:w-40 sm:h-40 lg:w-44 lg:h-44 sm:mr-6 object-contain" />
                             )}
 
                             {patientData && appointmentData && (
                                 <div className="mt-2 sm:mt-0 text-center sm:text-left sm:ml-4 lg:ml-6 flex flex-col justify-between h-full">
                                     <div>
-                                        <div className="font-[700] text-lg">{patientData.patientName}</div> 
+                                        <div className="font-[700] text-lg">{patientData.patientName}</div>
                                         <div className="font-[400] text-sm">{patientData.patientAge || 5} anos</div>
                                     </div>
 
                                     <div className="mt-1">
-                                        <div className="font-[400] text-sm">{patientData.tutorName}</div> 
+                                        <div className="font-[400] text-sm">{patientData.tutorName}</div>
                                         <div className="font-[400] text-sm">{appointmentData.doctorName}</div>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
                             </div>
                         </div>
 
-                        <div className="mt-4 w-full lg:w-[624px] border border-[#D9D9D9] rounded-[24px] p-3 flex flex-col justify-center"> 
+                        <div className="mt-4 w-full lg:w-[624px] border border-[#D9D9D9] rounded-[24px] p-3 flex flex-col justify-center">
                             <div className="font-[700] text-base text-center mb-2">
                                 Deseja realizar outra consulta?
                             </div>
@@ -81,7 +81,8 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
 
                     <div className="w-full">
                         <div className="font-[700] text-xl mb-4">Histórico de Consultas</div>
-                        <div className="w-full h-auto lg:w-[558px] lg:h-[448px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 space-y-4 overflow-y-auto">
+                        {/* AQUI FOI FEITA A ALTERAÇÃO: overflow-y-auto trocado por overflow-hidden */}
+                        <div className="w-full h-auto lg:w-[558px] lg:h-[448px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 space-y-4 overflow-hidden">
                             {historyData && historyData.length > 0 ? (
                                 historyData.map((item: any, idx: number) => (
                                     <div key={idx} className="w-full h-full">

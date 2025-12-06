@@ -39,14 +39,27 @@ export default function IntegrationPage(id: string) {
                     .filter((appt: any) => appt?.patientId === patientId)
                     .map((appt: any) => {
                         const datetime = new Date(appt.appointmentDate);
-                        return {
-                            date: datetime.toLocaleDateString(["pt-BR"], { day: "2-digit", month: "2-digit" }),
-                            time: datetime.toLocaleTimeString(["pt-BR"], { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"}),
-                            doctor: appt.doctorName,
-                            type: appt.appointmentType
-                        };
-                    });
+                        let tipo = "";
+        const tipoOriginal = appt.appointmentType;
 
+        if (tipoOriginal === "FIRST") {
+            tipo = "Primeira Consulta";
+        } else if (tipoOriginal === "RETURN") {
+            tipo = "Retorno";
+        } else if (tipoOriginal === "VACCINE") {
+            tipo = "Vacinação";
+        } else if (tipoOriginal === "CHECKUP") {
+            tipo = "Check-up";
+        } else {
+            tipo = tipoOriginal; 
+        }
+        return {
+            date: datetime.toLocaleDateString(["pt-BR"], { day: "2-digit", month: "2-digit" }),
+            time: datetime.toLocaleTimeString(["pt-BR"], { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"}),
+            doctor: appt.doctorName,
+            type: appt.appointmentType
+        };
+    });
                 setHistoryAppointment(historyData);
             } catch (error) {
                 console.error("Error loading data:", error);
