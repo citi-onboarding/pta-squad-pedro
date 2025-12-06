@@ -81,8 +81,7 @@ export default function VisualPage({ params, onAgendamento, onBack }: PatientVie
 
                     <div className="w-full">
                         <div className="font-[700] text-xl mb-4">Histórico de Consultas</div>
-                        {/* AQUI FOI FEITA A ALTERAÇÃO: overflow-y-auto trocado por overflow-hidden */}
-                        <div className="w-full h-auto lg:w-[558px] lg:h-[448px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 space-y-4 overflow-hidden">
+                        <div className="w-full h-auto lg:w-[558px] lg:min-h-[448px] rounded-3xl border border-[#D9D9D9] p-2 sm:p-4 lg:p-6 space-y-4">
                             {historyData && historyData.length > 0 ? (
                                 historyData.map((item: any, idx: number) => (
                                     <div key={idx} className="w-full h-full">

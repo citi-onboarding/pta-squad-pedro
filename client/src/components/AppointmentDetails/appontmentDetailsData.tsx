@@ -40,19 +40,19 @@ export default function IntegrationPage(id: string) {
                     .map((appt: any) => {
                         const datetime = new Date(appt.appointmentDate);
                         let tipo = "";
-        const tipoOriginal = appt.appointmentType;
+                        const Originaltype = tipo;
 
-        if (tipoOriginal === "FIRST") {
-            tipo = "Primeira Consulta";
-        } else if (tipoOriginal === "RETURN") {
-            tipo = "Retorno";
-        } else if (tipoOriginal === "VACCINE") {
-            tipo = "Vacinação";
-        } else if (tipoOriginal === "CHECKUP") {
-            tipo = "Check-up";
-        } else {
-            tipo = tipoOriginal; 
-        }
+                        if (Originaltype === "FIRST") {
+                            tipo = "Primeira Consulta";
+                        } else if (Originaltype === "RETURN") {
+                            tipo = "Retorno";
+                        } else if (Originaltype === "VACCINE") {
+                            tipo = "Vacinação";
+                        } else if (Originaltype === "CHECKUP") {
+                            tipo = "Check-up";
+                        } else {
+                            tipo = Originaltype; 
+                        }
         return {
             date: datetime.toLocaleDateString(["pt-BR"], { day: "2-digit", month: "2-digit" }),
             time: datetime.toLocaleTimeString(["pt-BR"], { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"}),
